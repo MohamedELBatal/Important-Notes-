@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/home/tabs/settings_tab.dart';
+import 'package:todo_app/home/tabs/task_tab.dart';
+
+import 'add_task_bottom_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = "HomeScreen";
@@ -15,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       backgroundColor: const Color(0xFFDFECDB),
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -25,7 +30,18 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet(
+            isScrollControlled: true,
+            context: context,
+            builder: (context) {
+              return Container(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child:  AddTaskBottomSheet());
+            },
+          );
+        },
         backgroundColor: Colors.blue,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
@@ -38,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
+        shape: const CircularNotchedRectangle(),
         notchMargin: 10,
         height: 89,
         child: BottomNavigationBar(
@@ -67,6 +83,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: ""),
             ]),
       ),
+      body: tabs[index],
     );
   }
+
+  List<Widget> tabs = [
+    const TasksTab(),
+    const SettingsTab(),
+  ];
 }
