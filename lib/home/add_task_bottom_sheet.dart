@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AddTaskBottomSheet extends StatefulWidget {
-   AddTaskBottomSheet({super.key});
+   const AddTaskBottomSheet({super.key});
 
   @override
   State<AddTaskBottomSheet> createState() => _AddTaskBottomSheetState();
@@ -104,7 +104,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
       lastDate: DateTime.now().add(
         const Duration(days: 360),
       ),
-      selectableDayPredicate: (day) => day != DateTime.now().add(Duration(days: 2)),
+      selectableDayPredicate: (day) => day != DateTime.now().add(const Duration(days: 2)),
     );
     if(selectDate!=null){chosenDate = selectDate;
     setState(() {

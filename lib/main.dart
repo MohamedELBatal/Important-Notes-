@@ -13,7 +13,7 @@ class ToDoApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute:HomeScreen.routeName ,
       routes: {
-        HomeScreen.routeName:(context)=> HomeScreen(),
+        HomeScreen.routeName:(context)=> const HomeScreen(),
       },
     );
   }
