@@ -1,6 +1,3 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -13,6 +10,10 @@ class TaskItem extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 12),
       decoration: const BoxDecoration(
         color: Colors.white,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(25),
+          topLeft: Radius.circular(25),
+        ),
       ),
       child: Slidable(
         startActionPane: ActionPane(
