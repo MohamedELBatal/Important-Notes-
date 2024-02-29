@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/firebase/firebase_function.dart';
+import 'package:todo_app/tasl_model.dart';
 
 class AddTaskBottomSheet extends StatefulWidget {
-   const AddTaskBottomSheet({super.key});
+  const AddTaskBottomSheet({super.key});
 
   @override
   State<AddTaskBottomSheet> createState() => _AddTaskBottomSheetState();
@@ -69,8 +71,8 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
             onTap: () {
               selectDate(context);
             },
-            child:  Text(
-              chosenDate.toString().substring(0,10),
+            child: Text(
+              chosenDate.toString().substring(0, 10),
               style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w100),
             ),
           ),
@@ -81,7 +83,13 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
             width: double.infinity,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-              onPressed: () {},
+              onPressed: () {
+                TaskModel model = TaskModel(
+                    title: titleController.text,
+                    description: descriptionController.text,
+                    date: chosenDate.millisecondsSinceEpoch);
+                FireBaseFunctions.addTask(model);
+              },
               child: const Text(
                 "Add Task",
                 style: TextStyle(
@@ -96,7 +104,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
     );
   }
 
-  selectDate(BuildContext context)async {
+  selectDate(BuildContext context) async {
     DateTime? selectDate = await showDatePicker(
       context: context,
       initialDate: chosenDate,
@@ -104,12 +112,12 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
       lastDate: DateTime.now().add(
         const Duration(days: 360),
       ),
-      selectableDayPredicate: (day) => day != DateTime.now().add(const Duration(days: 2)),
+      selectableDayPredicate: (day) =>
+          day != DateTime.now().add(const Duration(days: 2)),
     );
-    if(selectDate!=null){chosenDate = selectDate;
-    setState(() {
-
-    });
+    if (selectDate != null) {
+      chosenDate = selectDate;
+      setState(() {});
     }
   }
 }
