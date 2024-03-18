@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app/auth/auth.dart';
 import 'package:todo_app/home/home.dart';
 
 import 'firebase_options.dart';
@@ -9,6 +11,7 @@ void main()async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(const ToDoApp());
 }
 class ToDoApp extends StatelessWidget {
@@ -18,9 +21,10 @@ class ToDoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute:HomeScreen.routeName ,
+      initialRoute:AuthScreen.routeName ,
       routes: {
         HomeScreen.routeName:(context)=> const HomeScreen(),
+        AuthScreen.routeName:(context)=> const AuthScreen(),
       },
     );
   }

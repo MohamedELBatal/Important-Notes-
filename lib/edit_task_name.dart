@@ -1,38 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/firebase/firebase_function.dart';
 import 'package:todo_app/task_model.dart';
 
-class AddTaskBottomSheet extends StatefulWidget {
-  const AddTaskBottomSheet({super.key});
+import 'firebase/firebase_function.dart';
+
+class EditTaskName extends StatefulWidget {
+   EditTaskName({super.key});
 
   @override
-  State<AddTaskBottomSheet> createState() => _AddTaskBottomSheetState();
+  State<EditTaskName> createState() => _EditTaskNameState();
 }
 
-class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
+class _EditTaskNameState extends State<EditTaskName> {
+
   DateTime chosenDate = DateTime.now();
 
   var titleController = TextEditingController();
+
   var descriptionController = TextEditingController();
 
+  void _updateTextControllers(TaskModel model) {
+    setState(() {
+      titleController.text = model.title!;
+      descriptionController.text = model.description!;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
+      padding: const EdgeInsets.all(20),
+      child:   Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "Add New Task",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(
-            height: 26,
-          ),
+          const Text("Edit Task",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+          const SizedBox(height: 50,),
           TextFormField(
-            controller: titleController,
             decoration: InputDecoration(
-              label: const Text("Title"),
+              label:  Text(titleController.text),
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.blue),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20,),
+          TextFormField(
+            decoration: InputDecoration(
+              label:   Text(descriptionController.text),
               focusedBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Colors.blue),
                 borderRadius: BorderRadius.circular(12),
@@ -43,23 +59,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
             ),
           ),
           const SizedBox(
-            height: 26,
-          ),
-          TextFormField(
-            controller: descriptionController,
-            decoration: InputDecoration(
-              label: const Text("Description"),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.blue),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 26,
+            height: 20,
           ),
           Container(
             alignment: Alignment.centerLeft,
@@ -96,7 +96,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                 Navigator.pop(context);
               },
               child: const Text(
-                "Add Task",
+                "Save Changes",
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w300,
@@ -109,20 +109,20 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
     );
   }
 
-  selectDate(BuildContext context) async {
-    DateTime? selectDate = await showDatePicker(
-      context: context,
-      initialDate: chosenDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(
-        const Duration(days: 360),
-      ),
-      selectableDayPredicate: (day) =>
-          day != DateTime.now().add(const Duration(days: 2)),
-    );
-    if (selectDate != null) {
-      chosenDate = selectDate;
-      setState(() {});
-    }
-  }
+   selectDate(BuildContext context) async {
+     DateTime? selectDate = await showDatePicker(
+       context: context,
+       initialDate: chosenDate,
+       firstDate: DateTime.now(),
+       lastDate: DateTime.now().add(
+         const Duration(days: 360),
+       ),
+       selectableDayPredicate: (day) =>
+       day != DateTime.now().add(const Duration(days: 2)),
+     );
+     if (selectDate != null) {
+       chosenDate = selectDate;
+       setState(() {});
+     }
+   }
 }
