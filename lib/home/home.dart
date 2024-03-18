@@ -56,7 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         notchMargin: 10,
-        height: 89,
+        padding: EdgeInsets.zero,
+        height: 65,
         child: BottomNavigationBar(
             currentIndex: index,
             onTap: (value) {

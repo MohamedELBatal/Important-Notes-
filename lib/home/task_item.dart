@@ -1,9 +1,21 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:todo_app/edit_task_name.dart';
+import 'package:todo_app/firebase/firebase_function.dart';
+import 'package:todo_app/task_model.dart';
 
-class TaskItem extends StatelessWidget {
-  const TaskItem({super.key});
+class TaskItem extends StatefulWidget {
+  TaskModel taskModel;
 
+  TaskItem({required this.taskModel, super.key});
+
+  @override
+  State<TaskItem> createState() => _TaskItemState();
+}
+
+class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,7 +32,9 @@ class TaskItem extends StatelessWidget {
           motion: const DrawerMotion(),
           children: [
             SlidableAction(
-              onPressed: (context) {},
+              onPressed: (context) {
+                FireBaseFunctions.deleteTask(widget.taskModel.id ?? "");
+              },
               backgroundColor: Colors.red,
               autoClose: true,
               icon: Icons.delete,
@@ -32,7 +46,21 @@ class TaskItem extends StatelessWidget {
               ),
             ),
             SlidableAction(
-                onPressed: (context) {},
+                onPressed: (context) {
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) {
+                    return EditTaskName();
+                  },);
+                  FireBaseFunctions.updateTask(
+                    TaskModel(
+                      title: widget.taskModel.title,
+                      description: widget.taskModel.description,
+                      date: widget.taskModel.hashCode),
+
+                  );
+                },
                 backgroundColor: Colors.blue,
                 autoClose: true,
                 icon: Icons.edit,
@@ -48,42 +76,48 @@ class TaskItem extends StatelessWidget {
                 height: 80,
                 width: 8,
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: widget.taskModel.isDone! ? Colors.green : Colors.blue,
                   borderRadius: BorderRadius.circular(25),
                 ),
               ),
               const SizedBox(
                 width: 12,
               ),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Task Title",
+                      widget.taskModel.title ?? "",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 25),
+                      style: const TextStyle(fontSize: 25),
                     ),
-                    Text("Task Description"),
+                    Text(widget.taskModel.description ?? ""),
                   ],
                 ),
               ),
               const SizedBox(
                 width: 12,
               ),
-              Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(
-                    Icons.done,
-                    color: Colors.white,
-                    size: 30,
-                  )),
+              InkWell(
+                onTap: () {
+                  widget.taskModel.isDone = true;
+                  FireBaseFunctions.updateTask(widget.taskModel);
+                },
+                child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: widget.taskModel.isDone! ? Colors.green : Colors.blue,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.done,
+                      color: Colors.white,
+                      size: 30,
+                    )),
+              ),
             ],
           ),
         ),
