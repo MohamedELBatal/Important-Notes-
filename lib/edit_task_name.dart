@@ -92,7 +92,7 @@ class _EditTaskNameState extends State<EditTaskName> {
                     title: titleController.text,
                     description: descriptionController.text,
                     date: DateUtils.dateOnly(chosenDate).millisecondsSinceEpoch);
-                FireBaseFunctions.addTask(model);
+                FireBaseFunctions.updateTask(model);
                 Navigator.pop(context);
               },
               child: const Text(

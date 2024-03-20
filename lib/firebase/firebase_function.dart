@@ -18,7 +18,6 @@ class FireBaseFunctions {
     );
   }
 
-
   static CollectionReference<TaskModel> getTaskCollection() {
     return FirebaseFirestore.instance
         .collection(TaskModel.collectionName)
@@ -31,10 +30,10 @@ class FireBaseFunctions {
       },
     );
   }
-  static Future<void>addUser(UserModel user){
 
-    var collection=getUsersCollection();
-    var docRef=collection.doc(user.id);
+  static Future<void> addUser(UserModel user) {
+    var collection = getUsersCollection();
+    var docRef = collection.doc(user.id);
     return docRef.set(user);
   }
 
@@ -60,23 +59,38 @@ class FireBaseFunctions {
     return getTaskCollection().doc(model.id).update(model.toJson());
   }
 
-  static void createUSerAccount(String email, String password,String userName,String phone) async {
+  static void createUSerAccount(
+      {required String email,
+      required String password,
+      required String userName,
+        required String phone,
+        required Function onSucess,
+        required Function onError}) async {
     try {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      UserModel user=UserModel(id: credential.user?.uid??"", email: email, userName: userName,phone: phone);
-      addUser(user);
+      UserModel user = UserModel(
+          id: credential.user?.uid ?? "",
+          email: email,
+          userName: userName,
+          phone: phone);
+      addUser(user).then((value) {
+        onSucess();
+      }).catchError((e) {
+        onError();
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        onError(e.message);
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        onError(e.message);
       }
+      onError(e.message);
     } catch (e) {
-      print(e);
+      onError("Something Went Wrong");
     }
   }
 

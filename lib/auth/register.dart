@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/firebase/firebase_function.dart';
+import 'package:todo_app/home/home.dart';
 
 class RegisterTab extends StatelessWidget {
   RegisterTab({super.key});
@@ -9,107 +10,163 @@ class RegisterTab extends StatelessWidget {
   var userNameController = TextEditingController();
   var passwordController = TextEditingController();
 
+  var formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(18.0),
-      child: Column(
-        children: [
-          TextFormField(
-            controller: userNameController,
-            keyboardType: TextInputType.text,
-            decoration: InputDecoration(
-              label: const Text("User Name"),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          TextFormField(
-            controller: emailController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              label: const Text("Email"),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          TextFormField(
-            controller: phoneController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              label: const Text("Phone"),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          TextFormField(
-            controller: passwordController,
-            obscureText: true,
-            keyboardType: TextInputType.text,
-            decoration: InputDecoration(
-              label: const Text("Password"),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Container(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                FireBaseFunctions.createUSerAccount(
-                    emailController.text,
-                    passwordController.text,
-                    phoneController.text,
-                    userNameController.text);
+      child: Form(
+        key: formKey,
+        child: Column(
+          children: [
+            TextFormField(
+              controller: userNameController,
+              keyboardType: TextInputType.text,
+              validator: (value) {
+                if(value == null || value.isEmpty){
+                  return "User is Required";
+                }
               },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-              child: const Text(
-                "Register",
-                style: TextStyle(fontSize: 25, color: Colors.white),
+              decoration: InputDecoration(
+                label: const Text("User Name"),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
-          ),
-        ],
+            const SizedBox(
+              height: 12,
+            ),
+            TextFormField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) {
+                if(value == null || value.isEmpty){
+                  return "Email is Required";
+                }
+                 bool emailValid =
+                RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    .hasMatch(value);
+                if(!emailValid){
+                  return "Email not Valid";
+                }
+              },
+              decoration: InputDecoration(
+                label: const Text("Email"),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            TextFormField(
+              controller: phoneController,
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if(value == null || value.isEmpty){
+                  return "Phone Number is Required";
+                }
+              },
+              decoration: InputDecoration(
+                label: const Text("Phone"),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            TextFormField(
+              controller: passwordController,
+              obscureText: true,
+              validator: (value) {
+                if(value == null || value.isEmpty){
+                  return "Password is Required";
+                }
+              },
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                label: const Text("Password"),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            Container(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  if(formKey.currentState!.validate()){
+                    FireBaseFunctions.createUSerAccount(
+                      email:  emailController.text,
+                      password:  passwordController.text,
+                      phone:  phoneController.text,
+                      userName:  userNameController.text,
+                      onSucess: (){
+                        Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
+                      },
+                      onError: (errorMessage){
+                        showDialog(context: context, builder: (context) {
+                          return  AlertDialog(
+                            title: const Text("Error"),
+                            content: Text(errorMessage),
+                            actions: [
+                              ElevatedButton(onPressed: (){
+
+                              }, child: const Text("Cancel")),
+                              ElevatedButton(onPressed: (){
+
+                              }, child: const Text("OK")),
+
+                            ],
+                          );
+                        },
+                        );
+                      },
+
+                    );
+                  };
+
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                child: const Text(
+                  "Register",
+                  style: TextStyle(fontSize: 25, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
     ;
