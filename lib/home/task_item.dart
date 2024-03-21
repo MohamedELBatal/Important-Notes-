@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -57,7 +58,10 @@ class _TaskItemState extends State<TaskItem> {
                     TaskModel(
                       title: widget.taskModel.title,
                       description: widget.taskModel.description,
-                      date: widget.taskModel.hashCode),
+                      date: widget.taskModel.hashCode,
+                      userId: FirebaseAuth.instance.currentUser!.uid,
+
+                    ),
 
                   );
                 },

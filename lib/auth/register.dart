@@ -143,10 +143,12 @@ class RegisterTab extends StatelessWidget {
                             actions: [
                               ElevatedButton(onPressed: (){
 
-                              }, child: const Text("Cancel")),
+                              }, child: const Text("Cancel"),
+                              ),
                               ElevatedButton(onPressed: (){
 
-                              }, child: const Text("OK")),
+                              }, child: const Text("OK"),
+                              ),
 
                             ],
                           );
@@ -155,8 +157,7 @@ class RegisterTab extends StatelessWidget {
                       },
 
                     );
-                  };
-
+                  }
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 child: const Text(
