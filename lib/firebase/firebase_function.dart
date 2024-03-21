@@ -46,8 +46,11 @@ class FireBaseFunctions {
 
   static Stream<QuerySnapshot<TaskModel>> getTask(DateTime date) {
     return getTaskCollection()
+    .where("userId",isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .where("date",
             isEqualTo: DateUtils.dateOnly(date).millisecondsSinceEpoch)
+        
+        .orderBy("title",descending: false)
         .snapshots();
   }
 
@@ -58,7 +61,12 @@ class FireBaseFunctions {
   static Future<void> updateTask(TaskModel model) {
     return getTaskCollection().doc(model.id).update(model.toJson());
   }
-
+static Future<UserModel?> readUser()async{
+    String id=FirebaseAuth.instance.currentUser!.uid;
+    DocumentSnapshot<UserModel> documentSnapshot =
+    await getUsersCollection().doc(id).get();
+    return documentSnapshot.data();
+}
   static void createUSerAccount(
       {required String email,
       required String password,
@@ -72,6 +80,8 @@ class FireBaseFunctions {
         email: email,
         password: password,
       );
+      credential.user!.sendEmailVerification();
+      FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       UserModel user = UserModel(
           id: credential.user?.uid ?? "",
           email: email,
@@ -94,16 +104,21 @@ class FireBaseFunctions {
     }
   }
 
-  static login(String email, String password) async {
+  static login(String email, String password,
+      Function onSucess, Function onError) async {
     try {
       final credential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
+          .signInWithEmailAndPassword(
+          email: email,
+          password: password);
+      onSucess();
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
+      onError("Wrong Email or Password");
     }
+  }
+
+
+  static void logOut()async{
+    await FirebaseAuth.instance.signOut();
   }
 }

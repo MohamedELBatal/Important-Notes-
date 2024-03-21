@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app/firebase/firebase_function.dart';
+import 'package:todo_app/home/home.dart';
+import 'package:todo_app/provider/my_provider.dart';
 
 class LoginTab extends StatelessWidget {
   LoginTab({super.key});
@@ -8,6 +12,7 @@ class LoginTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<MyProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(18.0),
       child: Column(
@@ -58,7 +63,31 @@ class LoginTab extends StatelessWidget {
           Container(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                FireBaseFunctions.login(emailController.text, passwordController.text, (){
+                  provider.initUser();
+                  Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
+                }, (error){
+                  showDialog(context: context, builder: (context) {
+                    return  AlertDialog(
+                      title: const Text("Error"),
+                      content: Text(error),
+                      actions: [
+                        ElevatedButton(onPressed: (){
+
+                        }, child: const Text("Cancel"),
+                        ),
+                        ElevatedButton(onPressed: (){
+
+                        }, child: const Text("OK"),
+                        ),
+
+                      ],
+                    );
+                  },
+                  );
+                });
+              },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               child: const Text(
                 "Login",

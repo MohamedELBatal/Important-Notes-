@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/task_model.dart';
 
@@ -91,7 +92,11 @@ class _EditTaskNameState extends State<EditTaskName> {
                 TaskModel model = TaskModel(
                     title: titleController.text,
                     description: descriptionController.text,
-                    date: DateUtils.dateOnly(chosenDate).millisecondsSinceEpoch);
+                    date: DateUtils.dateOnly(chosenDate).millisecondsSinceEpoch,
+                  userId: FirebaseAuth.instance.currentUser!.uid,
+
+
+                );
                 FireBaseFunctions.updateTask(model);
                 Navigator.pop(context);
               },
