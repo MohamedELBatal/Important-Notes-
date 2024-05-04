@@ -52,8 +52,8 @@ class _TaskItemState extends State<TaskItem> {
                     isScrollControlled: true,
                     context: context,
                     builder: (context) {
-                    return EditTaskName();
-                  },);
+                      return EditTaskName();
+                    },);
                   FireBaseFunctions.updateTask(
                     TaskModel(
                       title: widget.taskModel.title,
@@ -111,7 +111,7 @@ class _TaskItemState extends State<TaskItem> {
                 },
                 child: Container(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                     decoration: BoxDecoration(
                       color: widget.taskModel.isDone! ? Colors.green : Colors.blue,
                       borderRadius: BorderRadius.circular(12),
