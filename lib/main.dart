@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/auth/auth.dart';
 import 'package:todo_app/home/home.dart';
@@ -48,15 +49,20 @@ class ToDoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<MyProvider>(context);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: provider.firebaseUser != null
-          ? HomeScreen.routeName
-          : AuthScreen.routeName,
-      routes: {
-        HomeScreen.routeName: (context) => const HomeScreen(),
-        AuthScreen.routeName: (context) => const AuthScreen(),
-      },
+    return ScreenUtilInit(
+      designSize: const Size(430, 932),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (_, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: provider.firebaseUser != null
+            ? HomeScreen.routeName
+            : AuthScreen.routeName,
+        routes: {
+          HomeScreen.routeName: (context) => const HomeScreen(),
+          AuthScreen.routeName: (context) => const AuthScreen(),
+        },
+      ),
     );
   }
 }

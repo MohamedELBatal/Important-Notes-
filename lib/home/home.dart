@@ -5,7 +5,6 @@ import 'package:todo_app/firebase/firebase_function.dart';
 import 'package:todo_app/home/tabs/settings_tab.dart';
 import 'package:todo_app/home/tabs/task_tab.dart';
 import 'package:todo_app/provider/my_provider.dart';
-
 import 'add_task_bottom_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     var provider = Provider.of<MyProvider>(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       extendBody: true,
       backgroundColor: const Color(0xFFDFECDB),
       appBar: AppBar(
