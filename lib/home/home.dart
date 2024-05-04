@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app/auth/auth.dart';
+import 'package:todo_app/firebase/firebase_function.dart';
+import 'package:todo_app/home/tabs/settings_tab.dart';
+import 'package:todo_app/home/tabs/task_tab.dart';
+import 'package:todo_app/provider/my_provider.dart';
+
+import 'add_task_bottom_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = "HomeScreen";
 
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -14,18 +22,37 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<MyProvider>(context);
     return Scaffold(
+      extendBody: true,
       backgroundColor: const Color(0xFFDFECDB),
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: const Text(
-          "ToDo",
-          style: TextStyle(color: Colors.white, fontSize: 30),
+        title:  Text(
+          "ToDo  ${provider.userModel?.userName}",
+          style: const TextStyle(color: Colors.white, fontSize: 30),
         ),
+        actions: [
+          IconButton(onPressed: () {
+            FireBaseFunctions.logOut();
+            Navigator.pushNamedAndRemoveUntil(context, AuthScreen.routeName, (route) => false);
+          }, icon: const Icon(Icons.logout))
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet(
+            isScrollControlled: true,
+            context: context,
+            builder: (context) {
+              return Container(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child:  const AddTaskBottomSheet());
+            },
+          );
+        },
         backgroundColor: Colors.blue,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
@@ -38,9 +65,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
+        shape: const CircularNotchedRectangle(),
         notchMargin: 10,
-        height: 89,
+        padding: EdgeInsets.zero,
+        height: 65,
         child: BottomNavigationBar(
             currentIndex: index,
             onTap: (value) {
@@ -67,6 +95,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: ""),
             ]),
       ),
+      body: tabs[index],
     );
   }
+
+  List<Widget> tabs = [
+    const TasksTab(),
+    const SettingsTab(),
+  ];
 }
